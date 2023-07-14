@@ -1,16 +1,23 @@
-# cat_list
+# Cat Catalog
 
-A new Flutter project.
+A project made by me to show a cat catalog with information about cats
 
-## Getting Started
+## Packages used
 
-This project is a starting point for a Flutter application.
+- Dio: To make http requests
+- Bloc: To state management
+- bloc_test: To unit bloc tests 
+- Mocktail: To mock class and make tests
+- equatable: To provide a help to bloc tests
+- flutterando_analysis: To make the code more cleaner
+- GoogleFonts: To add new fonts to the project
 
-A few resources to get you started if this is your first Flutter project:
+## Designers Patterns used 
+- State 
+- Repository 
+- Adapter
+- Service
+- Clean Dart 2.0 ( data / interactor / ui)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
