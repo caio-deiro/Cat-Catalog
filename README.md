@@ -1,6 +1,6 @@
 # Cat Catalog
 
-A project made by me to show a cat catalog with information about cats
+A project made by me to show a catalog with information about cats
 
 ## Packages used
 
@@ -17,7 +17,15 @@ A project made by me to show a cat catalog with information about cats
 - Repository 
 - Adapter
 - Service
-- Clean Dart 2.0 ( data / interactor / ui)
+- Clean Dart 2.0 (data / interactor / ui)
+
+## Images from project
+![image](https://github.com/caio-deiro/Cat-Catalog/assets/76565329/4e828555-2043-4ff6-98e4-9bd493bfa201)
+
+![image](https://github.com/caio-deiro/Cat-Catalog/assets/76565329/80682e96-0d2d-4f55-b417-c168693e994b)
+
+![image](https://github.com/caio-deiro/Cat-Catalog/assets/76565329/bf99c7fd-5063-4f83-b7ad-e3b772ff3c91)
+
 
 
 
