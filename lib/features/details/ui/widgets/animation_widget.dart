@@ -28,7 +28,7 @@ class _AnimationWidgetState extends State<AnimationWidget> {
         TweenAnimationBuilder<double>(
           curve: Curves.ease,
           tween: Tween<double>(begin: 0, end: widget.catValue.toDouble() / 5),
-          duration: const Duration(seconds: 2),
+          duration: const Duration(milliseconds: 2500),
           builder: (context, value, _) {
             return SizedBox(
               width: MediaQuery.of(context).size.width * .7,

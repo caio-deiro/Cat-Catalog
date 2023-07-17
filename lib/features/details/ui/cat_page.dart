@@ -24,7 +24,7 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 950),
+      duration: const Duration(milliseconds: 1000),
     );
 
     animationController.forward();
@@ -38,7 +38,7 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
       ),
     );
 
-    paddingAnimation = Tween<double>(begin: 100, end: 10).animate(
+    paddingAnimation = Tween<double>(begin: 100, end: 30).animate(
       CurvedAnimation(
         parent: animationController,
         curve: Curves.decelerate,
@@ -67,8 +67,8 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  const SizedBox(height: 20),
                   Hero(
                     tag: 'cat${widget.cat.id}',
                     child: Center(
@@ -86,6 +86,9 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
                   Padding(
                     padding: EdgeInsets.only(top: paddingAnimation.value),
                     child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Column(
