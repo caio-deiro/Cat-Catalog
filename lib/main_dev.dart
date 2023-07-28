@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(
     AppWidget(
-      environmentType: Prod(),
+      environmentType: Dev(),
     ),
   );
 }
