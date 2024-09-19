@@ -126,7 +126,7 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
