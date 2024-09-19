@@ -9,8 +9,7 @@
             "request": "launch",
             "flutterMode": "debug",
             "type": "dart",
-            "args": ["--flavor", "development", "--target", "lib/main_dev.dart"]
-           
+            "args": ["--dart-define-from-file", ".env", "--flavor", "development", "--target", "lib/main_dev.dart"] 
         },
         {
             "name": "cat_list staging",

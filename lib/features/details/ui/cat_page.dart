@@ -28,8 +28,7 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
     );
 
     animationController.forward();
-    colorAnimation = ColorTween(begin: Colors.transparent, end: Colors.black)
-        .animate(animationController);
+    colorAnimation = ColorTween(begin: Colors.transparent, end: Colors.black).animate(animationController);
 
     rotateAnimation = Tween<double>(begin: 4, end: 0).animate(
       CurvedAnimation(
@@ -78,6 +77,14 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(5),
                           child: Image.network(
                             widget.cat.url,
+                            errorBuilder: (context, error, stackTrace) => const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.pets),
+                                SizedBox(height: 5),
+                                Text('Image not found'),
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -6,20 +6,14 @@ class CatEntitie {
   final String url;
   final String description;
   final String origin;
-  // ignore: non_constant_identifier_names
   final String life_span;
   final String temperament;
   final int adaptability;
-  // ignore: non_constant_identifier_names
   final int child_friendly;
-  // ignore: non_constant_identifier_names
   final int dog_friendly;
-  // ignore: non_constant_identifier_names
   final int energy_level;
   final int intelligence;
-  // ignore: non_constant_identifier_names
   final int stranger_friendly;
-  // ignore: non_constant_identifier_names
   final int affection_level;
 
   const CatEntitie({
@@ -28,20 +22,40 @@ class CatEntitie {
     required this.url,
     required this.description,
     required this.origin,
-    // ignore: non_constant_identifier_names
     required this.life_span,
     required this.temperament,
     required this.adaptability,
-    // ignore: non_constant_identifier_names
     required this.child_friendly,
-    // ignore: non_constant_identifier_names
     required this.dog_friendly,
-    // ignore: non_constant_identifier_names
     required this.energy_level,
     required this.intelligence,
-    // ignore: non_constant_identifier_names
     required this.stranger_friendly,
-    // ignore: non_constant_identifier_names
     required this.affection_level,
   });
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is CatEntitie && other.name == name;
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode =>
+      name.hashCode ^
+      id.hashCode ^
+      url.hashCode ^
+      description.hashCode ^
+      origin.hashCode ^
+      life_span.hashCode ^
+      temperament.hashCode ^
+      adaptability.hashCode ^
+      child_friendly.hashCode ^
+      dog_friendly.hashCode ^
+      energy_level.hashCode ^
+      intelligence.hashCode ^
+      stranger_friendly.hashCode ^
+      affection_level.hashCode;
 }

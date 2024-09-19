@@ -9,3 +9,5 @@ final class HomeEventFilterCats extends HomeEvent {
 
   HomeEventFilterCats(this.filter);
 }
+
+final class HomeEventGetCatFromGemini extends HomeEvent {}

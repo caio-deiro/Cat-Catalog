@@ -1,12 +1,13 @@
 import 'package:cat_list/env.dart';
 import 'package:cat_list/features/details/ui/tabbar_page.dart';
-import 'package:cat_list/features/home/data/home_repository_impl.dart';
+import 'package:cat_list/features/home/data/repository/home_repository_impl.dart';
 import 'package:cat_list/features/home/interactor/bloc/home_bloc.dart';
 import 'package:cat_list/features/home/ui/home_page.dart';
 import 'package:cat_list/shared/services/dio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AppWidget extends StatelessWidget {
   final Environment environmentType;
@@ -25,13 +26,15 @@ class AppWidget extends StatelessWidget {
       routes: {
         '/home': (_) => BlocProvider<HomeBloc>(
               create: (context) => HomeBloc(
-                HomeRepositoryImpl(
-                  DioService(),
+                repository: HomeRepositoryImpl(
+                  picker: ImagePicker(),
+                  dio: DioService(),
+                  homeState: HomeState.initial(),
                 ),
               )..add(HomeEventFetchData()),
               child: const HomePage(),
             ),
-        '/catpage': (context) => const TabbarPage()
+        '/catpage': (context) => const TabbarPage(),
       },
     );
   }

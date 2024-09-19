@@ -45,6 +45,11 @@ dependencies:
   equatable: ^2.0.5
   google_fonts: ^5.1.0
   flutterando_analysis: ^0.0.2
+  flutter_gemini: ^2.0.4
+  image_picker: ^1.1.2
+  shared_preferences: ^2.3.2
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
