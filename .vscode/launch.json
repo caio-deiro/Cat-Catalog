@@ -16,14 +16,14 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
-            "args": ["--flavor", "staging", "--target", "lib/main_stg.dart"]
+            "args": ["--dart-define-from-file", ".env", "--flavor", "staging", "--target", "lib/main_stg.dart"]
         },
         {
             "name": "cat_list production",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
-            "args": ["--flavor", "production", "--target", "lib/main.dart"]
+            "args": ["--dart-define-from-file", ".env", "--flavor", "production", "--target", "lib/main.dart"]
         }
     ]
 }
