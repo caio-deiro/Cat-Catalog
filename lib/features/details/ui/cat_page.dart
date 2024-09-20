@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cat_list/features/home/interactor/entitie/cat_entitie.dart';
 import 'package:flutter/material.dart';
 
@@ -75,9 +76,16 @@ class _CatPageState extends State<CatPage> with SingleTickerProviderStateMixin {
                         constraints: const BoxConstraints(maxHeight: 350),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Image.network(
-                            widget.cat.url,
-                            errorBuilder: (context, error, stackTrace) => const Column(
+                          child: CachedNetworkImage(
+                            imageUrl: widget.cat.url,
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                                color: Colors.black,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => const Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(Icons.pets),
