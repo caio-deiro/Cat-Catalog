@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cat_list/shared/constants/api_key.dart';
+import 'package:cat_list/app/shared/constants/api_key.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 

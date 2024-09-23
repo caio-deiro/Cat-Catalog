@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cat_list/features/home/data/models/cat_model.dart';
-import 'package:cat_list/features/home/interactor/bloc/home_bloc.dart';
-import 'package:cat_list/features/home/interactor/repository/home_repository.dart';
-import 'package:cat_list/shared/services/dio_service.dart';
+import 'package:cat_list/app/features/home/data/models/cat_model.dart';
+import 'package:cat_list/app/features/home/interactor/bloc/home_bloc.dart';
+import 'package:cat_list/app/features/home/interactor/repository/home_repository.dart';
+import 'package:cat_list/app/shared/services/dio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -36,7 +36,6 @@ class HomeRepositoryImpl implements HomeRepository {
 
       final List<dynamic> data = response.data;
 
-      // ignore: unnecessary_lambdas
       final catList = data.map((e) => CatModel.fromJson(e)).toList();
 
       return homeState.copyWith(
@@ -83,10 +82,10 @@ class HomeRepositoryImpl implements HomeRepository {
           text: '''
               Leia essa imagem, e se contiver um gato, retorne mais informações sobre para cada chave  do json abaixo.
               Substitua os valores de exemplo por valores reais. Os exemplos de numero devem ser retornados de 0 a 5.
-              o id deve ser randomico, e o url deve ser o endereço de imagem dessa foto do gato, busque no freepik.com 
+              o id deve ser randomico, e o url deve ser o endereço de imagem correspondente a raça do gato encontrado.
+              antes de enviar, valide se a imagem ainda está disponivel para visualização ou  se está fora do ar (erro 404).
               A url deve começar com http:// ou https://, lembre-se de retornar apenas  URL da imagem apenas, e nao da pagina toda. 
               Envie apenas o json como resposta, sem nenhum caracter especial antes ou depois dele.
-              Caso não identifique um gato, retorne null como resposta.
               As infos devem ser todas em inglês.
               
               
@@ -121,9 +120,17 @@ class HomeRepositoryImpl implements HomeRepository {
         );
 
         if (result?.content?.parts?.last.text != null && result?.content?.parts?.last.text?.toLowerCase() != 'null') {
-          final decodedResponse = json.decode(result!.content!.parts!.last.text!);
+          debugPrint(result!.content!.parts!.last.text);
+          final decodedResponse = json.decode(result.content!.parts!.last.text!);
 
-          final cat = CatModel.fromJson(decodedResponse as Map<String, dynamic>);
+          if (decodedResponse is! Map<String, dynamic>) {
+            return homeState.copyWith(
+              errorMessage: "I can't see a cat in this picture",
+              status: HomeStateStatus.errorGemini,
+            );
+          }
+
+          final cat = CatModel.fromJson(decodedResponse);
           return homeState.copyWith(
             catEntitieFromGemini: cat,
             status: HomeStateStatus.geminiLoaded,

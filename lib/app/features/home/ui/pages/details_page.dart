@@ -1,7 +1,7 @@
-import 'package:cat_list/features/details/ui/widgets/animation_widget.dart';
+import 'package:cat_list/app/features/home/ui/widgets/animation_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../home/interactor/entitie/cat_entitie.dart';
+import '../../interactor/entitie/cat_entitie.dart';
 
 class DetailsPage extends StatelessWidget {
   final CatEntitie cat;

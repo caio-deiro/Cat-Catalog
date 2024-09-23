@@ -2,8 +2,8 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cat_list/features/home/interactor/bloc/home_bloc.dart';
-import 'package:cat_list/shared/services/cache_service.dart';
+import 'package:cat_list/app/features/home/interactor/bloc/home_bloc.dart';
+import 'package:cat_list/app/shared/services/cache_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

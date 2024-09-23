@@ -1,6 +1,6 @@
-import 'package:cat_list/features/home/interactor/entitie/cat_entitie.dart';
+import 'package:cat_list/app/features/home/interactor/entitie/cat_entitie.dart';
 
-class CatModel extends CatEntitie {
+final class CatModel extends CatEntitie {
   const CatModel({
     required String name,
     required String id,
@@ -70,4 +70,28 @@ class CatModel extends CatEntitie {
       'affection_level': affection_level,
     };
   }
+
+  // @override
+  // bool operator ==(Object other) {
+  //   if (identical(this, other)) return true;
+
+  //   return other is CatEntitie && other.name == name;
+  // }
+
+  // @override
+  // int get hashCode =>
+  //     name.hashCode ^
+  //     id.hashCode ^
+  //     url.hashCode ^
+  //     description.hashCode ^
+  //     origin.hashCode ^
+  //     life_span.hashCode ^
+  //     temperament.hashCode ^
+  //     adaptability.hashCode ^
+  //     child_friendly.hashCode ^
+  //     dog_friendly.hashCode ^
+  //     energy_level.hashCode ^
+  //     intelligence.hashCode ^
+  //     stranger_friendly.hashCode ^
+  //     affection_level.hashCode;
 }

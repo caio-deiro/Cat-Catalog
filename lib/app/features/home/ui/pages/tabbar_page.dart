@@ -1,8 +1,8 @@
-import 'package:cat_list/features/details/ui/cat_page.dart';
-import 'package:cat_list/features/details/ui/details_page.dart';
+import 'package:cat_list/app/features/home/ui/pages/cat_page.dart';
+import 'package:cat_list/app/features/home/ui/pages/details_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../home/interactor/entitie/cat_entitie.dart';
+import '../../interactor/entitie/cat_entitie.dart';
 
 class TabbarPage extends StatelessWidget {
   const TabbarPage({super.key});

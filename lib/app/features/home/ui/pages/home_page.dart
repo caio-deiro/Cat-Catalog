@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:cat_list/features/home/interactor/bloc/home_bloc.dart';
-import 'package:cat_list/features/home/ui/widgets/state_error_widget.dart';
-import 'package:cat_list/features/home/ui/widgets/state_loaded_widget.dart';
+import 'package:cat_list/app/features/home/interactor/bloc/home_bloc.dart';
+import 'package:cat_list/app/features/home/ui/widgets/state_error_widget.dart';
+import 'package:cat_list/app/features/home/ui/widgets/state_loaded_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

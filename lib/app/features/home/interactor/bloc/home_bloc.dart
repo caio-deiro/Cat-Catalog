@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:cat_list/features/home/interactor/entitie/cat_entitie.dart';
-import 'package:cat_list/features/home/interactor/repository/home_repository.dart';
-import 'package:cat_list/shared/services/shared_preferences_service.dart';
+import 'package:cat_list/app/features/home/interactor/entitie/cat_entitie.dart';
+import 'package:cat_list/app/features/home/interactor/repository/home_repository.dart';
+import 'package:cat_list/app/shared/services/shared_preferences_service.dart';
 import 'package:equatable/equatable.dart';
 
 part 'home_event.dart';
@@ -22,20 +22,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   int? requestPage;
   static const popupKey = 'showPopup';
 
-  void _filterCats(HomeEventFilterCats event, Emitter emit) {
-    if (state.status == HomeStateStatus.loaded) {
-      final filterCatList = immutableList
-          .where(
-            (element) => element.name.toLowerCase().startsWith(
-                  event.filter.toLowerCase(),
-                ),
-          )
-          .toList();
-
-      emit(state.copyWith(list: filterCatList));
-    }
-  }
-
+  /// Fetch cats from repository
   Future<void> _homeEventFetchData(
     HomeEventFetchData event,
     Emitter emit,
@@ -58,6 +45,38 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
+  /// Get cat from Picture mode
+  Future<void> _getCatFromGemini(
+    HomeEventGetCatFromGemini event,
+    Emitter emit,
+  ) async {
+    emit(state.copyWith(status: HomeStateStatus.loading));
+    final result = await repository.getCatInfoByPicture();
+    emit(
+      state.copyWith(
+        catEntitieFromGemini: result.catEntitieFromGemini,
+        status: result.status,
+        errorMessage: result.errorMessage,
+      ),
+    );
+  }
+
+  /// Filter cats by name
+  void _filterCats(HomeEventFilterCats event, Emitter emit) {
+    if (state.status == HomeStateStatus.loaded) {
+      final filterCatList = immutableList
+          .where(
+            (element) => element.name.toLowerCase().startsWith(
+                  event.filter.toLowerCase(),
+                ),
+          )
+          .toList();
+
+      emit(state.copyWith(list: filterCatList));
+    }
+  }
+
+  /// Increment request page to fetch more data
   void incrementRequestPage() {
     if ((requestPage ?? 0) < 8 && requestPage != null) {
       requestPage = requestPage! + 1;
@@ -65,6 +84,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     requestPage ??= 1;
   }
 
+  /// Remove duplicates from list
   List<CatEntitie> listWithoutEquals(
     List<CatEntitie> firstList,
     List<CatEntitie> secondList,
@@ -85,28 +105,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     return catMap.values.toList();
-  }
-
-  Future<void> setShowPopup() async {
-    await sharedPreferencesService.setBool(key: popupKey, value: state.showPopup ?? false);
-  }
-
-  bool getShowPopup({bool show = true}) {
-    return sharedPreferencesService.getBool(key: popupKey);
-  }
-
-  Future<void> _getCatFromGemini(
-    HomeEventGetCatFromGemini event,
-    Emitter emit,
-  ) async {
-    emit(state.copyWith(status: HomeStateStatus.loading));
-    final result = await repository.getCatInfoByPicture();
-    emit(
-      state.copyWith(
-        catEntitieFromGemini: result.catEntitieFromGemini,
-        status: result.status,
-        errorMessage: result.errorMessage,
-      ),
-    );
   }
 }
