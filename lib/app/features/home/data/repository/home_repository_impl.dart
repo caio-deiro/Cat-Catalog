@@ -74,12 +74,14 @@ class HomeRepositoryImpl implements HomeRepository {
       final result = await gemini.textAndImage(
         modelName: 'models/gemini-1.5-flash',
         text: '''
-              Leia essa imagem, e se contiver um gato, retorne mais informações sobre para cada chave  do json abaixo.
+              Leia essa imagem, e voce reconhecer algum gato na foto, retorne mais informações sobre esse gato para cada chave do  
+              modelo json abaixo. Caso não reconheça nenhum gato, não retorne o json abaixo, em vez disso retorne apenas um texto 
+              NULL como resposta e mais nada.
               Substitua os valores de exemplo por valores reais. Os exemplos de numero devem ser retornados de 0 a 5.
               o id deve ser randomico, e o url deve ser o endereço de imagem correspondente a raça do gato encontrado.
               antes de enviar, valide se a imagem ainda está disponivel para visualização ou  se está fora do ar (erro 404).
               A url deve começar com http:// ou https://, lembre-se de retornar apenas  URL da imagem apenas, e nao da pagina toda. 
-              Envie apenas o json como resposta, sem nenhum caracter especial antes ou depois dele.
+              Envie apenas o json em formato de String como resposta, sem nenhum caracter especial antes ou depois dele.
               As infos devem ser todas em inglês.
               
               
@@ -113,17 +115,16 @@ class HomeRepositoryImpl implements HomeRepository {
         ],
       );
 
-      if (result?.content?.parts?.last.text != null && result?.content?.parts?.last.text?.toLowerCase() != 'null') {
+      if (result?.content?.parts?.last.text?.toLowerCase() != 'null') {
         debugPrint(result!.content!.parts!.last.text);
-
-        final decodedResponse = json.decode(result.content!.parts!.last.text!);
-
-        if (decodedResponse is! Map<String, dynamic>) {
-          return Result.failure(HomeErrorsGemini("I can't recognize this cat, try again please!"));
+        var decodedResponse = <String, dynamic>{};
+        try {
+          decodedResponse = json.decode(result.content!.parts!.last.text!);
+          final cat = CatModel.fromJson(decodedResponse);
+          return Result.success(cat);
+        } catch (e) {
+          return Result.failure(HomeErrorsGemini("I can't see a cat in this picture"));
         }
-
-        final cat = CatModel.fromJson(decodedResponse);
-        return Result.success(cat);
       } else {
         return Result.failure(HomeErrorsGemini("I can't see a cat in this picture"));
       }

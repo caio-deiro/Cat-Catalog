@@ -40,8 +40,6 @@ void main() {
     createFile();
   });
 
-  setUp(() {});
-
   group('deve testar as chamadas para o gemini', () {
     test('deve retornar um cat model do gemini | ', () async {
       when(
