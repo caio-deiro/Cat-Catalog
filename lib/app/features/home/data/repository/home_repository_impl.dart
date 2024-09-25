@@ -2,27 +2,24 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cat_list/app/features/home/data/models/cat_model.dart';
-import 'package:cat_list/app/features/home/interactor/bloc/home_bloc.dart';
+import 'package:cat_list/app/features/home/interactor/errors/home_error.dart';
 import 'package:cat_list/app/features/home/interactor/repository/home_repository.dart';
 import 'package:cat_list/app/shared/services/dio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:result_dart/result_dart.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
   final DioService dio;
-  final HomeState homeState;
-  final ImagePicker picker;
-
+  final Gemini gemini;
   HomeRepositoryImpl({
     required this.dio,
-    required this.homeState,
-    required this.picker,
+    required this.gemini,
   });
 
   @override
-  Future<HomeState> fetchData(int page) async {
+  AsyncResult<List<CatModel>, HomeErrorsApi> fetchData(int page) async {
     try {
       final response = await dio.get(
         DioService.baseUrl,
@@ -38,48 +35,45 @@ class HomeRepositoryImpl implements HomeRepository {
 
       final catList = data.map((e) => CatModel.fromJson(e)).toList();
 
-      return homeState.copyWith(
-        previousList: catList,
-        status: HomeStateStatus.loaded,
-      );
+      return Result.success(catList);
     } on DioException catch (e, _) {
       switch (e.type) {
         case DioExceptionType.badResponse:
-          return homeState.copyWith(
-            errorMessage: 'An error occurred while processing your request. Please try again later.',
-            status: HomeStateStatus.error,
+          return Result.failure(
+            HomeErrorsApi(
+              'An error occurred while processing your request. Please try again.',
+            ),
           );
         case DioExceptionType.connectionError:
-          return homeState.copyWith(
-            errorMessage: 'Your internet connection is not working. Please check your connection and try again.',
-            status: HomeStateStatus.error,
+          return Result.failure(
+            HomeErrorsApi(
+              'Your internet connection is not working. Please check your connection and try again.',
+            ),
           );
         case DioExceptionType.badCertificate:
-          return homeState.copyWith(
-            errorMessage: 'An internal error occurred. Please try again later.',
-            status: HomeStateStatus.error,
+          return Result.failure(
+            HomeErrorsApi(
+              'An internal error occurred. Please try again later.',
+            ),
           );
         // ignore: no_default_cases
         default:
-          return homeState.copyWith(
-            errorMessage: 'An unknown error occurred. Please try again later.',
-            status: HomeStateStatus.error,
+          return Result.failure(
+            HomeErrorsApi(
+              'An unknown error occurred. Please try again later.',
+            ),
           );
       }
     }
   }
 
   @override
-  Future<HomeState> getCatInfoByPicture() async {
+  AsyncResult<CatModel, HomeErrorsGemini> getCatInfoByPicture({required String imagePath}) async {
     try {
-      late final File? file;
-      final gemini = Gemini.instance;
-      final photo = await picker.pickImage(source: ImageSource.camera);
-      if (photo != null) {
-        file = File(photo.path);
-        final result = await gemini.textAndImage(
-          modelName: 'models/gemini-1.5-flash',
-          text: '''
+      final file = File(imagePath);
+      final result = await gemini.textAndImage(
+        modelName: 'models/gemini-1.5-flash',
+        text: '''
               Leia essa imagem, e se contiver um gato, retorne mais informações sobre para cada chave  do json abaixo.
               Substitua os valores de exemplo por valores reais. Os exemplos de numero devem ser retornados de 0 a 5.
               o id deve ser randomico, e o url deve ser o endereço de imagem correspondente a raça do gato encontrado.
@@ -114,42 +108,28 @@ class HomeRepositoryImpl implements HomeRepository {
               
       
               ''',
-          images: [
-            file.readAsBytesSync(),
-          ],
-        );
+        images: [
+          file.readAsBytesSync(),
+        ],
+      );
 
-        if (result?.content?.parts?.last.text != null && result?.content?.parts?.last.text?.toLowerCase() != 'null') {
-          debugPrint(result!.content!.parts!.last.text);
-          final decodedResponse = json.decode(result.content!.parts!.last.text!);
+      if (result?.content?.parts?.last.text != null && result?.content?.parts?.last.text?.toLowerCase() != 'null') {
+        debugPrint(result!.content!.parts!.last.text);
 
-          if (decodedResponse is! Map<String, dynamic>) {
-            return homeState.copyWith(
-              errorMessage: "I can't see a cat in this picture",
-              status: HomeStateStatus.errorGemini,
-            );
-          }
+        final decodedResponse = json.decode(result.content!.parts!.last.text!);
 
-          final cat = CatModel.fromJson(decodedResponse);
-          return homeState.copyWith(
-            catEntitieFromGemini: cat,
-            status: HomeStateStatus.geminiLoaded,
-          );
-        } else {
-          return homeState.copyWith(
-            errorMessage: "I can't see a cat in this picture",
-            status: HomeStateStatus.errorGemini,
-          );
+        if (decodedResponse is! Map<String, dynamic>) {
+          return Result.failure(HomeErrorsGemini("I can't recognize this cat, try again please!"));
         }
+
+        final cat = CatModel.fromJson(decodedResponse);
+        return Result.success(cat);
       } else {
-        return homeState.copyWith(status: HomeStateStatus.loaded);
+        return Result.failure(HomeErrorsGemini("I can't see a cat in this picture"));
       }
     } on GeminiException catch (e, stk) {
       debugPrintStack(label: e.message.toString(), stackTrace: stk);
-      return homeState.copyWith(
-        errorMessage: 'An error occurred while processing your request. Please try again.',
-        status: HomeStateStatus.errorGemini,
-      );
+      return Result.failure(HomeErrorsGemini('An error occurred while processing your request. Please try again.'));
     }
   }
 }

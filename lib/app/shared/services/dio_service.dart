@@ -2,6 +2,7 @@
 import 'package:cat_list/app/shared/constants/api_key.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
 
 class DioService extends DioForNative {
   static const baseUrl = 'https://api.thecatapi.com/v1/images/search';
@@ -20,5 +21,11 @@ class DioServiceInterceptor extends Interceptor {
     options.headers['x-api-key'] = Constants.apiKey;
 
     return super.onRequest(options, handler);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    debugPrint('Error: ${err.message} \n ErrorType: ${err.type} \n StackTrace: ${err.stackTrace}');
+    super.onError(err, handler);
   }
 }

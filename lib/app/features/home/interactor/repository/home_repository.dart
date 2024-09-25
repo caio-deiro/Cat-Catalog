@@ -1,7 +1,9 @@
-import 'package:cat_list/app/features/home/interactor/bloc/home_bloc.dart';
+import 'package:cat_list/app/features/home/data/models/cat_model.dart';
+import 'package:cat_list/app/features/home/interactor/errors/home_error.dart';
+import 'package:result_dart/result_dart.dart';
 
 abstract class HomeRepository {
-  Future<HomeState> fetchData(int catRequestEntity);
+  AsyncResult<List<CatModel>, HomeErrorsApi> fetchData(int catRequestEntity);
 
-  Future<HomeState> getCatInfoByPicture();
+  AsyncResult<CatModel, HomeErrorsGemini> getCatInfoByPicture({required String imagePath});
 }

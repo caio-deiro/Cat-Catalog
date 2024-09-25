@@ -3,15 +3,18 @@ import 'package:cat_list/app/features/home/interactor/entitie/cat_entitie.dart';
 import 'package:cat_list/app/features/home/interactor/repository/home_repository.dart';
 import 'package:cat_list/app/shared/services/shared_preferences_service.dart';
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeRepository repository;
+  ImagePicker picker;
 
   HomeBloc({
     required this.repository,
+    required this.picker,
   }) : super(HomeState.initial()) {
     on<HomeEventFetchData>(_homeEventFetchData);
     on<HomeEventFilterCats>(_filterCats);
@@ -36,13 +39,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     incrementRequestPage();
     final result = await repository.fetchData(requestPage!);
-    if (result.status == HomeStateStatus.loaded) {
-      final filterList = listWithoutEquals(state.list, result.previousList);
-      emit(result.copyWith(list: filterList));
+
+    result.fold((catList) {
+      final filterList = listWithoutEquals(state.list, catList);
+      emit(state.copyWith(list: filterList, status: HomeStateStatus.loaded));
       immutableList = state.list;
-    } else {
-      emit(result);
-    }
+    }, (error) {
+      emit(state.copyWith(status: HomeStateStatus.error, errorMessage: error.message));
+    });
   }
 
   /// Get cat from Picture mode
@@ -51,19 +55,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter emit,
   ) async {
     emit(state.copyWith(status: HomeStateStatus.loading));
-    final result = await repository.getCatInfoByPicture();
-    emit(
-      state.copyWith(
-        catEntitieFromGemini: result.catEntitieFromGemini,
-        status: result.status,
-        errorMessage: result.errorMessage,
-      ),
+    final photo = await picker.pickImage(source: ImageSource.camera);
+    if (photo == null) {
+      emit(state.copyWith(status: HomeStateStatus.loaded));
+      return;
+    }
+    final result = await repository.getCatInfoByPicture(imagePath: photo.path);
+    result.fold(
+      (catEntitieFromGemini) {
+        emit(
+          state.copyWith(
+            catEntitieFromGemini: catEntitieFromGemini,
+            status: HomeStateStatus.geminiLoaded,
+          ),
+        );
+      },
+      (error) {
+        emit(
+          state.copyWith(
+            status: HomeStateStatus.errorGemini,
+            errorMessage: error.message,
+          ),
+        );
+      },
     );
   }
 
   /// Filter cats by name
   void _filterCats(HomeEventFilterCats event, Emitter emit) {
-    if (state.status == HomeStateStatus.loaded) {
+    if (state.status != HomeStateStatus.error) {
       final filterCatList = immutableList
           .where(
             (element) => element.name.toLowerCase().startsWith(

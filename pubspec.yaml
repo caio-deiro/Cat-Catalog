@@ -50,6 +50,9 @@ dependencies:
   shared_preferences: ^2.3.2
   cached_network_image: ^3.4.1
   flutter_cache_manager: ^3.4.1
+  http_mock_adapter: ^0.6.1
+  result_dart: ^1.1.1
+  
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"

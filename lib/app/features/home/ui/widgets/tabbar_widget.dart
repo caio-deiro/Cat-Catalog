@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 
 import '../../interactor/entitie/cat_entitie.dart';
 
-class TabbarPage extends StatelessWidget {
-  const TabbarPage({super.key});
+class TabbarWidget extends StatelessWidget {
+  const TabbarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // ignore: cast_nullable_to_non_nullable
-    final args = ModalRoute.of(context)!.settings.arguments as CatEntitie;
+    final args = ModalRoute.of(context)!.settings.arguments! as CatEntitie;
     return Scaffold(
       body: DefaultTabController(
         length: 2,
