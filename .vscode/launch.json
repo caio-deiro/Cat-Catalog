@@ -15,7 +15,7 @@
             "name": "cat_list staging",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile",
+            "flutterMode": "debug",
             "args": ["--dart-define-from-file", ".env", "--flavor", "staging", "--target", "lib/main_stg.dart"]
         },
         {
