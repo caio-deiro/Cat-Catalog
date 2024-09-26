@@ -31,9 +31,22 @@ void main() {
     affectionLevel: 5,
   );
 
-  final repository = HomeRepositoryMock();
-  final picker = MockImagePicker();
-  final homeBloc = HomeBloc(repository: repository, picker: picker);
+  late final HomeRepository repository;
+  late final ImagePicker picker;
+  late final HomeBloc homeBloc;
+
+  setUpAll(() {
+    repository = HomeRepositoryMock();
+    picker = MockImagePicker();
+    homeBloc = HomeBloc(repository: repository, picker: picker);
+  });
+
+  tearDown(() {
+    if (!homeBloc.isClosed) {
+      homeBloc.close();
+      homeBloc = HomeBloc(repository: repository, picker: picker);
+    }
+  });
 
   group('Deve testar as funcoes da camada bloc', () {
     test('Deve buscar os dados e retornar sucesso', () async {
