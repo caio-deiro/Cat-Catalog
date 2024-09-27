@@ -38,14 +38,14 @@ void main() {
   setUpAll(() {
     repository = HomeRepositoryMock();
     picker = MockImagePicker();
+  });
+
+  setUp(() {
     homeBloc = HomeBloc(repository: repository, picker: picker);
   });
 
   tearDown(() {
-    if (!homeBloc.isClosed) {
-      homeBloc.close();
-      homeBloc = HomeBloc(repository: repository, picker: picker);
-    }
+    homeBloc.close();
   });
 
   group('Deve testar as funcoes da camada bloc', () {
@@ -61,7 +61,7 @@ void main() {
     });
   });
 
-  group('Testes de estado do BLOC ', () {
+  group('deve testar os estados da home bloc', () {
     blocTest(
       'deve retornar LOADED quando os dados sao buscados | ',
       build: () {

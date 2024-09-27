@@ -92,7 +92,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           )
           .toList();
 
-      emit(state.copyWith(list: filterCatList));
+      emit(state.copyWith(list: filterCatList, status: HomeStateStatus.loaded));
     }
   }
 
