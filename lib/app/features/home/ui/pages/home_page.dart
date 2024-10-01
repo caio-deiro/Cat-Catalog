@@ -27,9 +27,23 @@ class _HomePageState extends State<HomePage> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                // backgroundColor: Colors.redAccent,
-                duration: const Duration(seconds: 2),
-                content: Text(state.errorMessage ?? ''),
+                backgroundColor: Colors.white,
+                duration: const Duration(seconds: 3),
+                shape: Border.all(width: 2),
+                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                behavior: SnackBarBehavior.floating,
+                content: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      state.errorMessage ?? "I can't see a cat here!",
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                  ),
+                ),
               ),
             );
           }
@@ -54,7 +68,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    context.read<HomeBloc>().close();
     _subscription.cancel();
     super.dispose();
   }
