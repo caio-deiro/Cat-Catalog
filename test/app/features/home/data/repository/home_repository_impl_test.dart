@@ -7,6 +7,7 @@ import 'package:cat_list/app/features/home/interactor/errors/home_error.dart';
 import 'package:cat_list/app/features/home/interactor/repository/home_repository.dart';
 import 'package:cat_list/app/shared/services/dio_service.dart';
 import 'package:cat_list/app/shared/services/gemini_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
@@ -27,8 +28,9 @@ void main() {
     file = File('generated/file.dart')..createSync(recursive: true);
   }
 
-  setUpAll(() {
+  setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load();
     GeminiService().initGemini;
     geminiService = MockGeminiService();
     dioService = DioService();

@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeStateErrorWidget extends StatelessWidget {
   final HomeState state;
-  const HomeStateErrorWidget({super.key, required this.state});
+  final void Function() onTryAgain;
+  const HomeStateErrorWidget({super.key, required this.state, required this.onTryAgain});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,14 @@ class HomeStateErrorWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 15),
-        ElevatedButton(
-          onPressed: () => context.read<HomeBloc>().add(HomeEventFetchData()),
-          child: const Text('Try again!'),
-        ),
+        if (state.status == HomeStateStatus.error)
+          ElevatedButton(
+            onPressed: () {
+              context.read<HomeBloc>().add(HomeEventFetchData());
+              onTryAgain();
+            },
+            child: const Text('Try again!'),
+          ),
       ],
     );
   }

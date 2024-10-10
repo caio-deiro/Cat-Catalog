@@ -1,12 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'home_bloc.dart';
 
-enum HomeStateStatus { loading, moreImageLoading, loaded, error, errorGemini, geminiLoaded }
+enum HomeStateStatus { loading, moreImageLoading, loaded, error, errorGemini, geminiLoaded, filtersEmpty }
 
 final class HomeState extends Equatable {
   final HomeStateStatus status;
   final List<CatEntitie> list;
   final List<CatEntitie> previousList;
+  final List<CatEntitie> immutableList;
   final CatEntitie? catEntitieFromGemini;
   final String? errorMessage;
   final bool? showPopup;
@@ -18,6 +19,7 @@ final class HomeState extends Equatable {
     required this.status,
     required this.catEntitieFromGemini,
     required this.showPopup,
+    required this.immutableList,
   });
 
   factory HomeState.initial() {
@@ -28,6 +30,7 @@ final class HomeState extends Equatable {
       previousList: [],
       catEntitieFromGemini: null,
       showPopup: null,
+      immutableList: [],
     );
   }
 
@@ -39,6 +42,7 @@ final class HomeState extends Equatable {
     HomeStateStatus? status,
     CatEntitie? catEntitieFromGemini,
     bool? showPopup,
+    List<CatEntitie>? immmutableList,
   }) {
     return HomeState(
       list: list ?? this.list,
@@ -47,6 +51,7 @@ final class HomeState extends Equatable {
       status: status ?? this.status,
       catEntitieFromGemini: catEntitieFromGemini ?? this.catEntitieFromGemini,
       showPopup: showPopup ?? this.showPopup,
+      immutableList: immmutableList ?? immutableList,
     );
   }
 
@@ -58,5 +63,6 @@ final class HomeState extends Equatable {
         previousList,
         catEntitieFromGemini,
         showPopup,
+        immutableList,
       ];
 }

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:cat_list/app/features/home/interactor/entitie/cat_entitie.dart';
 import 'package:cat_list/app/features/home/interactor/repository/home_repository.dart';
-import 'package:cat_list/app/shared/services/shared_preferences_service.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
 part 'home_event.dart';
@@ -20,10 +20,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeEventFilterCats>(_filterCats);
     on<HomeEventGetCatFromGemini>(_getCatFromGemini);
   }
-  final sharedPreferencesService = SharedPreferencesService();
-  List<CatEntitie> immutableList = <CatEntitie>[];
+
+  /// Show status changes in the console
+  @override
+  void onChange(Change<HomeState> change) {
+    debugPrint('${change.nextState.status} ${change.nextState.errorMessage}');
+    super.onChange(change);
+  }
+
+  /// Request page to fetch data
   int? requestPage;
-  static const popupKey = 'showPopup';
 
   /// Fetch cats from repository
   Future<void> _homeEventFetchData(
@@ -42,8 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     result.fold((catList) {
       final filterList = listWithoutEquals(state.list, catList);
-      emit(state.copyWith(list: filterList, status: HomeStateStatus.loaded));
-      immutableList = state.list;
+      emit(state.copyWith(list: filterList, status: HomeStateStatus.loaded, immmutableList: filterList));
     }, (error) {
       emit(state.copyWith(status: HomeStateStatus.error, errorMessage: error.message));
     });
@@ -84,13 +89,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   /// Filter cats by name
   void _filterCats(HomeEventFilterCats event, Emitter emit) {
     if (state.status != HomeStateStatus.error) {
-      final filterCatList = immutableList
+      final filterCatList = state.immutableList
           .where(
             (element) => element.name.toLowerCase().startsWith(
                   event.filter.toLowerCase(),
                 ),
           )
           .toList();
+
+      if (filterCatList.isEmpty) {
+        emit(state.copyWith(status: HomeStateStatus.filtersEmpty, errorMessage: "No cat's found", list: []));
+        return;
+      }
 
       emit(state.copyWith(list: filterCatList, status: HomeStateStatus.loaded));
     }

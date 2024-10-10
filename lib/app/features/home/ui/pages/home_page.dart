@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:cat_list/app/features/home/interactor/bloc/home_bloc.dart';
-import 'package:cat_list/app/features/home/ui/widgets/state_error_widget.dart';
 import 'package:cat_list/app/features/home/ui/widgets/state_loaded_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,14 +12,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
-  late StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _subscription = context.read<HomeBloc>().stream.listen((state) {
+      context.read<HomeBloc>().stream.listen((state) {
         if (state.status == HomeStateStatus.errorGemini) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -67,28 +63,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.pink[50],
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          if (state.status != HomeStateStatus.error) {
-            return HomeStateLoadedWidget(
-              scrollController: _scrollController,
-            );
-          }
-
-          if (state.status == HomeStateStatus.error) {
-            return HomeStateErrorWidget(state: state);
-          }
-
-          return const SizedBox.shrink();
+          return HomeStateLoadedWidget(
+            scrollController: _scrollController,
+          );
         },
       ),
     );

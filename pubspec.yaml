@@ -47,7 +47,6 @@ dependencies:
   flutterando_analysis: ^0.0.2
   flutter_gemini: ^2.0.4
   image_picker: ^1.1.2
-  shared_preferences: ^2.3.2
   cached_network_image: ^3.4.1
   flutter_cache_manager: ^3.4.1
   http_mock_adapter: ^0.6.1
