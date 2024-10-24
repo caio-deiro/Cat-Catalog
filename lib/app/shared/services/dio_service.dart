@@ -2,6 +2,7 @@
 import 'package:cat_list/app/shared/constants/api_key.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 class DioService extends DioForNative {
@@ -25,6 +26,7 @@ class DioServiceInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    FirebaseCrashlytics.instance.recordError(err, err.stackTrace, reason: err.message);
     debugPrint('Error: ${err.message} \n ErrorType: ${err.type} \n StackTrace: ${err.stackTrace}');
     super.onError(err, handler);
   }

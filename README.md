@@ -27,5 +27,4 @@ A project made by me to show a catalog with information about cats
 
 ![image2](<Screenshot 2024-10-01 000510.png>)
 
-
 ![image3](<Screenshot 2024-10-01 000541.png>)
